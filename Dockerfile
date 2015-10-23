@@ -1,9 +1,19 @@
-FROM ubuntu:14.04
+FROM php:5.6-apache
 
 # Install packages
-RUN apt-get update
-RUN apt-get -y install git
-RUN apt-get -y install apache2 mysql-server libapache2-mod-php5 imagemagick php5-mysql php5-gd php5-curl php5-imagick
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    imagemagick \
+    libmagickwand-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmcrypt-dev \
+    libpng12-dev
+# Install modules
+RUN docker-php-ext-install iconv mcrypt  mysql mysqli pdo pdo_mysql exif && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-install gd && \
+    echo | pecl install imagick-beta
 
 # Modify php.ini to contain the following settings:
 #   max_execution_time = 200
@@ -11,21 +21,11 @@ RUN apt-get -y install apache2 mysql-server libapache2-mod-php5 imagemagick php5
 #   upload_max_size = 100M
 #   upload_max_filesize = 20M
 #   memory_limit = 256M
-RUN sed -i -e "s/^max_execution_time\s*=.*/max_execution_time = 200/" \
--e "s/^post_max_size\s*=.*/post_max_size = 100M/" \
--e "s/^upload_max_filesize\s*=.*/upload_max_filesize = 20M\nupload_max_size = 100M/" \
--e "s/^memory_limit\s*=.*/memory_limit = 256M/" /etc/php5/apache2/php.ini
+RUN echo 'extension=imagick.so' > /usr/local/etc/php/conf.d/ext-imagick.ini
+RUN echo 'max_execution_time = 200\npost_max_size = 100M\nupload_max_filesize = 20M\nupload_max_size = 100M\nmemory_limit = 256M'  >> /usr/local/etc/php/php.ini
 
-# Link /var/www to /app directory
-RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
-WORKDIR /app
+RUN a2ensite 000-default
 
-# Clone lychee
-RUN git clone https://github.com/electerious/Lychee.git .
-
-# Set file permissions
-RUN chown -R www-data:www-data /app
-RUN chmod -R 777 uploads/ data/
-
-EXPOSE 80
-CMD src/commands/start
+COPY src/commands/start /usr/local/bin/start
+RUN chmod 755 /usr/local/bin/start
+CMD ["/usr/local/bin/start"]

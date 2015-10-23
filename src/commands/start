@@ -1,8 +1,7 @@
 #!/bin/bash
-# Run this script to start Apache and MySQL
 
-# Start MySQL
-mysqld &
+# Check to see if dir is empty or not
+cd /var/www/html && [ ! $(ls -A) ] && git clone https://github.com/electerious/Lychee.git . && chown -R www-data:www-data .
 
 # Start Apache
 source /etc/apache2/envvars
