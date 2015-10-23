@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmcrypt-dev \
     libpng12-dev
 # Install modules
-RUN docker-php-ext-install iconv mcrypt  mysql mysqli pdo pdo_mysql exif && \
+RUN docker-php-ext-install iconv mcrypt  mysql mysqli pdo pdo_mysql exif  mbstring zip && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install gd && \
     echo | pecl install imagick-beta
