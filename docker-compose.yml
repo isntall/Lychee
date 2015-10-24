@@ -1,14 +1,20 @@
-mariadb:
+fpm:
+  image: lch00-n:latest
+  volumes:
+    - /srv/docker/lychee/srv/:/var/www/html
+  links:
+    - web:web
+    - db:db
+db:
   image: mariadb:10.0
   environment:
     - MYSQL_ROOT_PASSWORD=lychee
   volumes:
     - /srv/docker/lychee/mysql:/var/lib/mysql
-lychee:
-  image: lch00:latest
+web:
+  image: nginx:latest
   volumes:
     - /srv/docker/lychee/srv/:/var/www/html
-  links:
-    - mariadb:mariadb
+    - /srv/docker/lychee/srv/src/conf/nginx/conf.d:/etc/nginx/conf.d
   ports:
     - "10080:80"
