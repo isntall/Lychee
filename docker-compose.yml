@@ -3,7 +3,6 @@ fpm:
   volumes:
     - /srv/docker/lychee/srv/:/var/www/html
   links:
-    - web:web
     - db:db
 db:
   image: mariadb:10.0
@@ -18,3 +17,5 @@ web:
     - /srv/docker/lychee/srv/src/conf/nginx/conf.d:/etc/nginx/conf.d
   ports:
     - "10080:80"
+  links:
+    - fpm:fpm
