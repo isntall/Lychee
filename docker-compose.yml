@@ -1,5 +1,5 @@
 fpm:
-  image: lch00-n:latest
+  image: isntall/lychee:fpm
   volumes:
     - /srv/docker/lychee/srv/:/var/www/html
   links:
