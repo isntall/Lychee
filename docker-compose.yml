@@ -4,6 +4,8 @@ fpm:
     - /srv/docker/lychee/srv/:/var/www/html
   links:
     - db:db
+  environment:
+    - USERID
 db:
   image: mariadb:10.0
   environment:
