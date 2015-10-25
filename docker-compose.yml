@@ -6,6 +6,8 @@ db:
     - /srv/docker/lychee/mysql:/var/lib/mysql
 mod-php:
   image: isntall/lychee:mod-php
+  environment:
+    - USERID
   volumes:
     - /srv/docker/lychee/srv/:/var/www/html
   links:

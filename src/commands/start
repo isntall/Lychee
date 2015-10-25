@@ -1,7 +1,10 @@
 #!/bin/bash
-
+echo "the userid $USERID"
+[[ -z $USERID ]] && USERID="33"
+echo $USERID
 # Check to see if dir is empty or not
-cd /var/www/html && [[ ! $(ls -A) ]] && git clone https://github.com/isntall/Lychee.git . && chown -R www-data:www-data .
+cd /var/www/html && [[ ! $(ls -A) ]] && git clone https://github.com/isntall/Lychee.git .
+chown -R $USERID:www-data . && chmod -R 775 .
 
 # Start Apache
 source /etc/apache2/envvars
