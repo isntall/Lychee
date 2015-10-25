@@ -16,17 +16,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && \
     apt-get autoremove -y
 
-# Modify php.ini to contain the following settings:
-#   max_execution_time = 200
-#   post_max_size = 100M
-#   upload_max_size = 100M
-#   upload_max_filesize = 20M
-#   memory_limit = 256M
-RUN echo 'extension=imagick.so' > /usr/local/etc/php/conf.d/ext-imagick.ini
-RUN echo 'max_execution_time = 200\npost_max_size = 100M\nupload_max_filesize = 20M\nupload_max_size = 100M\nmemory_limit = 256M'  >> /usr/local/etc/php/php.ini
-
-RUN a2ensite 000-default
-
+COPY src/conf/apache2/lychee.conf /etc/apache2/sites-available/lychee.conf
+COPY src/conf/php/php.ini /usr/local/etc/php/php.ini
+COPY src/conf/php/conf.d/ext-imagick.ini /usr/local/etc/php/conf.d/ext-imagick.ini
 COPY src/commands/start /usr/local/bin/start
+RUN a2ensite lychee
 RUN chmod 755 /usr/local/bin/start
 CMD ["/usr/local/bin/start"]
