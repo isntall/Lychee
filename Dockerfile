@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
-    libpng12-dev \
-    nginx && \
+    libpng12-dev && \
     docker-php-ext-install exif iconv mbstring mcrypt mysql mysqli pdo_mysql pdo zip && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install gd && \
